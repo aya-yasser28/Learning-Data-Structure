@@ -259,17 +259,3 @@ void displaySortedArray(T array[] , int size)
         }
     }
 }
-int main()
-{
-    int array[5] ={3 , 2 , 8 , 1 , 9};
-   // SelectionSort(array ,5);
-  //  InsertionSort(array, 5);
-    //ShellSort( array , 5);
-   // BubbleSort(array , 5);
-    QuickSort(array , 0 , 4);
-    displaySortedArray(array , 5);
-   // int a = 4 , b = 6;
-   // Swap(a , b);
-   // cout << a << b;
-    return 0 ;
-}
