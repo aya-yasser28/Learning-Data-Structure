@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include<iostream>
+#include <queue>
 using namespace std;
 
 //======================public methods =================================
@@ -95,6 +96,12 @@ void BinaryTree<T>::printPreOrder() const
 }
 
 template <typename T>
+void BinaryTree<T>::print()
+{
+    breadthFirstTraversal();
+}
+
+template <typename T>
 void BinaryTree<T>::destroy()
 {
    destroyTree(root);
@@ -180,6 +187,36 @@ void BinaryTree<T>::preorder(BTNode<T>* node) const
         preorder(node->left);
     }
 }
+template <typename T>
+void BinaryTree<T>::breadthFirstTraversal() const
+{
+    queue<BTNode<T> *> BTQueue;
+    BTNode<T>* p = root;
+    if (p !=  nullptr) //ensure the tree is not empty
+    {
+        BTQueue.push(p); // push the root  (the initial data to begin the printing)
+        while (!BTQueue.empty())
+        {
+            p = BTQueue.front(); //store the value to be deleted to print it after deleting
+            BTQueue.pop();
+            cout << p->info << " " ;
+            /* why this order of the previous steps is very important is very important ?
+             *  we want to update the pointer p to be able to visit all nodes and based on th queue principle "FIFO"
+             *  we store the first value in the queue then delete it then print and check the right and the left of the deleted element in the queue
+             *  push new values and we sure the level order is accurate because of the queue
+             */
+            if (p->left !=  nullptr)
+            {
+                BTQueue.push(p->left);
+            }
+            if (p->right != nullptr)
+            {
+                BTQueue.push(p->right);
+            }
+        }
+    }
+}
+
 template <typename T>
 void BinaryTree<T>::copyTree(BTNode<T>*& copiedTreeNode, BTNode<T>*& otherTreeRoot)
 {

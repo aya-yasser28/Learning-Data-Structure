@@ -16,6 +16,10 @@ struct BTNode{
         this->left = nullptr;
     }
 };
+/* to some functions we will create two methods public , private that because some function should pass the root to it
+ * which is hard to the user to know which node is the root so to make it easier to use we make private function to implement
+ * the logic and the public one to call the private function and pass the root to it
+ */
 template<typename T>
 class BinaryTree
 {
@@ -28,9 +32,12 @@ public:
     int numberOfNodes() const;// number of the nodes
     int numberOfLeaves()const; // number of leaves
     //traverse
+    //Depth First Traversal
     void printInOrder() const;//LNR
     void printPostOrder() const;//LRN
     void printPreOrder() const;//RNL
+    // Breadth First Traversal
+    void print(); //level by level
     void destroy();
     BinaryTree(const BinaryTree<T>& other);
     BinaryTree();
@@ -41,6 +48,7 @@ private:
     void inorder(BTNode<T>* node) const;
     void preorder(BTNode<T>* node) const;
     void postOrder(BTNode<T>* node) const;
+    void breadthFirstTraversal() const ;
     int height(BTNode<T>* node) const;
     int countNode(BTNode<T>* node)const;
     int countLeaves(BTNode<T>* node) const;

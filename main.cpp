@@ -28,8 +28,9 @@ int main()
     bst.insert(12);
     bst.insert(90);
     bst.insert(66);
-   cout << bst.numberOfNodes();
-    cout << bst.numberOfLeaves();
+  //  cout << bst.numberOfNodes();
+   // cout << bst.numberOfLeaves();
+    bst.print();
 
     return 0;
 }
