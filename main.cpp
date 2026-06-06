@@ -6,6 +6,7 @@
 #include "BinarySearchTree.h"
 #include "AVLTree.h"
 #include "sortingAlgorithms.h"
+#include "Heap.h"
 #include "UnorderedLinkedList.h"
 #include "OrderedLinkedList.h"
 #include "DoublyLinkedList.h"
@@ -115,6 +116,20 @@ int main()
     {
         cout << "List has  elements\n";
     }
+    Heap<int> h;
+    h.push(50);
+    h.push(20);
+    h.push(40);
+    h.push(30);
+    h.display();
+    h.pop();
+    cout<<h.size() <<endl;
+    cout<< h.top() <<endl;
+    cout << h.empty() << endl;
+    h.clear();
+    cout << h.empty() <<endl;
+    h.display();
+
 
     return 0;
 
