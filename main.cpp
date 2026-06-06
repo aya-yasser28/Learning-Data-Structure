@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "BinarySearchTree.h"
+#include "AVLTree.h"
 #include "sortingAlgorithms.h"
 using namespace std;
 int main()
@@ -19,19 +20,24 @@ int main()
     // Swap(a , b);
     // cout << a << b;
     BinarySearchTree<int> bst;
-    bst.insert(56);
-    bst.insert(87);
-    bst.insert(23);
-    bst.insert(65);
-    bst.insert(34);
-    bst.insert(45);
-    bst.insert(12);
-    bst.insert(90);
-    bst.insert(66);
+    AVLTree<int> avlTree;
+    avlTree.insert(15);
+    avlTree.insert(20);
+    avlTree.insert(24);
+    avlTree.insert(10);
+    avlTree.insert(13);
+    avlTree.insert(7);
+    avlTree.insert(30);
+    avlTree.insert(36);
+    avlTree.insert(25);
   //  cout << bst.numberOfNodes();
    // cout << bst.numberOfLeaves();
-    bst.print();
-
+    cout << "Initial insertion: " ;
+    avlTree.print();
+    //avlTree.removeNode(20);
+    //avlTree.print();
+    avlTree.removeNode(10);
+    avlTree.print();
     return 0;
 }
 //56 87 23 65 34 45 12 90 66

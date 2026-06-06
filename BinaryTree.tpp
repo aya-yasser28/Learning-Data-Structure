@@ -1,6 +1,8 @@
 //
 // Created by Aya on 2026-05-20.
 //
+#pragma once
+
 
 #include "BinaryTree.h"
 
@@ -214,6 +216,7 @@ void BinaryTree<T>::breadthFirstTraversal() const
                 BTQueue.push(p->right);
             }
         }
+        cout << endl;
     }
 }
 
@@ -234,5 +237,4 @@ void BinaryTree<T>::copyTree(BTNode<T>*& copiedTreeNode, BTNode<T>*& otherTreeRo
 }
 
 
-
-
+// BINARYTREE_TPP

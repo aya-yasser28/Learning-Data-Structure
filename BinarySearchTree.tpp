@@ -56,7 +56,7 @@ void BinarySearchTree<T>::deleteFromTree(BTNode<T>* node)
      }
 }
 template<typename T>
-void BinarySearchTree<T>::deleteNode(T value)
+void BinarySearchTree<T>::removeNode(T value)
 {
     BTNode<T>* current;
      BTNode<T>* trailCurrent;

@@ -9,11 +9,13 @@ struct BTNode{
     T info;
     BTNode* right;
     BTNode* left;
+    int balanceFactor; // this will be used only in the avl trees
 
     BTNode()
     {
         this->right= nullptr;
         this->left = nullptr;
+        this->balanceFactor = 0;
     }
 };
 /* to some functions we will create two methods public , private that because some function should pass the root to it
@@ -41,7 +43,7 @@ public:
     void destroy();
     BinaryTree(const BinaryTree<T>& other);
     BinaryTree();
-    ~BinaryTree();
+    virtual ~BinaryTree();
 private:
     void copyTree(BTNode<T>* & copiedTreeNode , BTNode<T>* & otherTreeRoot);
     void destroyTree(BTNode<T>* & node);
