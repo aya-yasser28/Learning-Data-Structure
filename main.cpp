@@ -8,6 +8,7 @@
 #include "sortingAlgorithms.h"
 #include "UnorderedLinkedList.h"
 #include "OrderedLinkedList.h"
+#include "DoublyLinkedList.h"
 using namespace std;
 int main()
 {
@@ -80,6 +81,7 @@ int main()
     {
         cout << "Not Found\n";
     }
+    oll.destroyList();
     if (oll.isEmpty())
     {
         cout << "List is Empty! \n";
@@ -88,6 +90,33 @@ int main()
     {
         cout << "List has  elements\n";
     }
+    DoublyLinkedList<int> dll;
+    dll.insert(50);
+    dll.insert(60);
+    dll.insert(10);
+    dll.print();
+    dll.deleteNode(10)   ;
+    dll.print();
+    cout <<dll.length()     << endl;
+    if (dll.search(80))
+    {
+        cout <<"Found\n";
+    }
+    else
+    {
+        cout << "Not Found\n";
+    }
+    dll.destroyList();
+    if (dll.isEmpty())
+    {
+        cout << "List is Empty! \n";
+    }
+    else
+    {
+        cout << "List has  elements\n";
+    }
+
     return 0;
+
 }
 //56 87 23 65 34 45 12 90 66
