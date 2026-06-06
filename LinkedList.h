@@ -44,8 +44,16 @@ public :
     T back() const;
     virtual  bool search(const T & item)=0;
     virtual  void insertFirst(const T& newItem) = 0 ;
+    virtual void insert(const T& newItem) = 0;
     virtual  void insertLast(const T& newItem) = 0 ;
     virtual void deleteNode(const T& item) = 0 ;
+    /*
+     * in the delete we have 4 cases:
+     * case 1: list is empty
+     * case 2: the item to be deleted is the first item
+     * case 3:  the item to be deleted somewhere in the list or the last item
+     * case 4: the item is not in the list
+     */
     LinkedListIterator<T> begin();
     LinkedListIterator<T> end();
     LinkedList(const LinkedList<T>& other);
