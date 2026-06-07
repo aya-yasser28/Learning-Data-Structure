@@ -9,13 +9,13 @@ struct BTNode{
     T info;
     BTNode* right;
     BTNode* left;
-    int balanceFactor; // this will be used only in the avl trees
+    int height; // this will be used only in the avl trees
 
     BTNode()
     {
         this->right= nullptr;
         this->left = nullptr;
-        this->balanceFactor = 0;
+        this->height = 1;
     }
 };
 /* to some functions we will create two methods public , private that because some function should pass the root to it

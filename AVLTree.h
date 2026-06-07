@@ -15,12 +15,13 @@ template <typename T>
 class AVLTree : public BinarySearchTree<T>
 {
 private:
-    void insertIntoAVL(BTNode<T>* &node ,BTNode<T>* newNode , bool& isTaller);
-    void deleteFromTree(BTNode<T>*& node  , T value , bool& isShorter);
-    void deleteNode(BTNode<T>* & node , bool& isShorter);
+    BTNode<T>* insertIntoAVL(BTNode<T>* &node , const T& value );
+    BTNode<T>* deleteFromTree(BTNode<T>*& node  ,  const T& value );
+    int height(BTNode<T>*& node);
+    int getBalanceFactor(BTNode<T>*& node);
     // single rotations:
-    void rotateLeft(BTNode<T>* &node);
-    void rotateRight(BTNode<T>* &node);
+    BTNode<T>* rotateLeft(BTNode<T>* &node);
+    BTNode<T>* rotateRight(BTNode<T>* &node);
     // double rotations:
     /*
      * if the balance factors are positive so make a single Left Rotation
@@ -28,16 +29,17 @@ private:
      * if they are opposite signs then we will implement a double rotation
      */
     // -1 means the left subtree is higher  , 0 the heights are equal , 1 means the right subtree is higher
-    void balanceFromLeft(BTNode<T>* & node); //this function will be called if the node's balance factor is -1
-
-    void balanceFromRight(BTNode<T>* & node); // this function will be called if the node's balance factor is 1
-   void balanceFromLeftDeletion(BTNode<T>*& node , bool& isShorter);
-    void balanceFromRightDeletion(BTNode<T>*& node , bool&isShorter);
+    BTNode<T>* leftRightRotate(BTNode<T>*& node);
+    BTNode<T>* rightLeftRotate(BTNode<T>*& node);
+    BTNode<T>* rebalance(BTNode<T>*& node);
+    BTNode<T>* minValueNode(BTNode<T>*& node);
+    BTNode<T>* maxValueNode(BTNode<T>*& node);
 public :
     AVLTree();
     void insert(T value);
     void removeNode(T value);
-
+    T minValue();
+    T maxValue();
 
 };
 #include "AVLTree.tpp"

@@ -11,411 +11,206 @@ AVLTree<T>::AVLTree()
 }
 
 template <typename T>
-void AVLTree<T>::rotateLeft(BTNode<T>* &node)
-{
-    BTNode<T>* p;
-    if (node == nullptr)
-    {
-        cerr << "Error: node is NULL!\n";
-    }
-    else if (node->right == nullptr) // as we rotate the right subtree to the let so if it is null then no rotation
-    {
-        cerr << "No right subtree to rotate!\n";
-    }
-    else
-    {
-        p = node->right;
-        node->right = p->left;  // the left subtree  of the new root is the right subtree to the node after rotation
-        p->left = node ;
-        node = p;
-    }
-}
-template <typename T>
-void AVLTree<T>::rotateRight(BTNode<T>*& node)
-{
-    BTNode<T>* p ;
-    if (node  ==  nullptr)
-    {
-        cerr <<"Error: node is NULL! \n";
-    }
-    else if (node->left == nullptr)
-    {
-        cerr<<"No left subtree to rotate! \n";
-    }
-    else
-    {
-        p = node->left;
-        node->left = p->right;
-        p->right = node ;
-        node = p;
-    }
-}
-
-template <typename T>
-void AVLTree<T>::balanceFromLeft(BTNode<T>*& node)
-{
-    BTNode<T>* p;
-    BTNode<T>* w;
-    p =  node->left; //pointer to the left subtree of the node
-    switch (p->balanceFactor)
-    {
-    case -1:
-        // they are both negative  so implement single right rotation and update the balance factors
-        node->balanceFactor = 0;
-        p->balanceFactor = 0;
-        rotateRight(node);
-        break;
-    case 0:
-        //if the root is unbalanced so it is impossible to the child's balance factor to be 0
-        cerr<<"Error: Con not balance from Left! \n";
-        break;
-    case 1:
-        // opposite signs so we implement double rotation  first left single rotation  at p  and the right single rotation at the node
-        w = p->right; // pointer to the right of the p node which is the left subtree of the node
-        switch (w->balanceFactor)
-        {
-        case -1 : // the left subtree of w is higher
-            node->balanceFactor = 1 ;
-            p->balanceFactor =0;
-            break;
-        case 0 : // they are equal
-            node->balanceFactor=0;
-            p->balanceFactor = 0;
-            break;
-        case 1: // the right subtree is higher
-            node->balanceFactor=0;
-            p->balanceFactor= -1;
-        default:
-            break;
-        }
-        w->balanceFactor = 0;
-        rotateLeft(p);
-        node->left = p;
-        rotateRight(node);
-    default:
-        break;
-    }
-}
-template <typename T>
-void AVLTree<T>::balanceFromRight(BTNode<T>*& node)
-{
-
-    BTNode<T>* p;
-    BTNode<T>* w;
-    p= node->right;
-    switch (p->balanceFactor)
-    {
-    case -1 :
-        // double rotation node->balanceFactor = 1 and its child->balanceFactor  = -1
-        w= p->left;
-        switch (w->balanceFactor)
-        {
-        case -1:
-            node->balanceFactor = 0;
-            p->balanceFactor = 1;
-            break;
-        case 0:
-            node->balanceFactor=0;
-            p->balanceFactor = 0;
-            break;
-        case 1:
-            node->balanceFactor = -1;
-            p->balanceFactor = 0;
-            break;
-        default:
-            break;
-        }
-        w->balanceFactor = 0;
-        rotateRight(p);
-        node->right = p ;
-        rotateLeft(node);
-        break;
-    case 0 :
-        cerr << "Error : Can not balance from right! \n";
-        break;
-    case 1:
-        node->balanceFactor = 0 ;
-        p->balanceFactor = 0;
-        rotateLeft(node);
-    default:
-        break;
-    }
-
-}
-
-template <typename T>
-void AVLTree<T>::insertIntoAVL(BTNode<T>* &node, BTNode<T>* newNode, bool& isTaller)
+int AVLTree<T>::getBalanceFactor(BTNode<T>*& node)
 {
     if (node == nullptr)
     {
-     node = newNode;
-     isTaller = true;
+        return 0;
     }
-    else if (node->info ==  newNode->info)
+   return height(node->left) - height(node->right);
+}
+template <typename T>
+int AVLTree<T>::height(BTNode<T>*& node)
+{
+    if (node == nullptr)
     {
-        cerr<<"No duplicates are allowed! \n";
+        return 0;
     }
-    else if (node->info > newNode->info)
+    return node->height;
+}
+
+template <typename T>
+BTNode<T>* AVLTree<T>::maxValueNode(BTNode<T>*& node)
+{
+     BTNode<T>* current  = node;
+    while (current->right != nullptr)
     {
-        insertIntoAVL(node->left , newNode , isTaller);
-        // after insertion and the height of the left subtree is increased
-        if (isTaller)
-        {
-            switch (node->balanceFactor)
-            {
-            case -1 :
-                balanceFromLeft(node);
-                isTaller = false; // we have balanced the tree
-                break;
-            case 0 :
-                node->balanceFactor = -1;
-                isTaller =true;
-                break;
-            case 1:
-                node->balanceFactor = 0;
-                isTaller = false;
-                break;
-            default:
-                break;
-            } // end switch
-        } // end if isTaller
-    } // end else if
-    else  // node->info < newNode->info
+        current = current->right;
+    }
+    return current;
+}
+
+template <typename T>
+BTNode<T>* AVLTree<T>::minValueNode(BTNode<T>*& node)
+{
+    BTNode<T>* current  = node;
+    while (current->left != nullptr)
     {
-       insertIntoAVL(node->right , newNode , isTaller);
-        if (isTaller)
+        current = current->left;
+    }
+    return current;
+}
+
+
+template <typename T>
+BTNode<T>* AVLTree<T>::rotateLeft(BTNode<T>* &node)
+{
+    BTNode<T>* current = node->right;
+    BTNode<T>* temp = current->left;
+    current->left = node;
+    node->right = temp;
+    node->height = 1+ max(height(node->left) , height(node->right));
+    current->height = 1+ max(height(current->left) , height(current->right));
+    return current;
+}
+template <typename T>
+BTNode<T>* AVLTree<T>::rotateRight(BTNode<T>*& node)
+{
+   BTNode<T>* current = node->left;
+    BTNode<T>* temp = current->right;
+    current->right= node;
+    node->left= temp;
+    node->height = 1+ max(height(node->left) , height(node->right));
+    current->height = 1+ max(height(current->left) , height(current->right));
+    return current;
+}
+
+template <typename T>
+BTNode<T>* AVLTree<T>::leftRightRotate(BTNode<T>*& node)
+{
+    node->left = rotateLeft(node->left);
+    return rotateRight(node);
+}
+template <typename T>
+BTNode<T>* AVLTree<T>::rightLeftRotate(BTNode<T>*& node)
+{
+    node->right = rotateRight(node->right);
+    return rotateLeft(node);
+}
+
+template <typename T>
+BTNode<T>* AVLTree<T>::rebalance(BTNode<T>*& node)
+{
+    int balance = getBalanceFactor(node);
+    if (balance > 1 )
+    {
+        if (getBalanceFactor(node->left) < 0)
         {
-            switch (node->balanceFactor)
-            {
-            case -1:
-                node->balanceFactor = 0;
-                isTaller = false;
-                break;
-            case 0 :
-                node->balanceFactor = 1;
-                isTaller = true;
-                break;
-            case 1:
-                balanceFromRight(node);
-                isTaller = false;
-                break;
-            default:
-                break;
-            }// end switch
-        } // end if isTaller
-    } // end else
-} // end insertIntoAVL
+             return leftRightRotate(node);
+        }
+        if (getBalanceFactor(node->left) >= 0)
+        {
+            return  rotateRight(node);
+        }
+    }
+    else if (balance < -1)
+    {
+        if (getBalanceFactor(node->right) > 0)
+        {
+            return rightLeftRotate(node);
+        }
+        if (getBalanceFactor(node->right) <= 0)
+        {
+           return  rotateLeft(node);
+        }
+    }
+    return  node;
+}
+
+template <typename T>
+BTNode<T>* AVLTree<T>::insertIntoAVL(BTNode<T>* &node, const T& value)
+{
+    if (node == nullptr)
+    {
+         node = new BTNode<T>;
+        node->left = nullptr;
+        node->right = nullptr;
+        node->height = 1;
+        node->info = value;
+    }
+    else if (value < node->info)
+    {
+        node->left = insertIntoAVL(node->left , value);
+    }
+    else if (value > node->info)
+    {
+        node->right = insertIntoAVL(node->right , value);
+    }
+    node->height = 1+ (max(height(node->left) , height(node->right)));
+
+    return rebalance(node);
+}
 
 template <typename T>
 void AVLTree<T>::insert(T value)
 {
-    bool isTaller = false;
-    BTNode<T>* newNode;
-    newNode = new BTNode<T>;
-    newNode->info = value;
-    newNode->balanceFactor = 0;
-    newNode->left= nullptr;
-    newNode->right = nullptr;
-    insertIntoAVL(this->root  , newNode , isTaller);
+    this->root = insertIntoAVL(this->root  , value );
 }
 
-template <typename T>
-void AVLTree<T>::balanceFromLeftDeletion(BTNode<T>*& node , bool& isShorter)
-{
-    BTNode<T>* p;
-    BTNode<T>* w;
-    switch (node->balanceFactor)
-    {
-    case -1:
-        node->balanceFactor = 0 ;
-        break;
-    case 0 :
-        node->balanceFactor = 1 ;
-        isShorter = false;
-        break;
-    case 1:
-        p = node->right;
-        switch (p->balanceFactor)
-        {
-        case -1 :
-            w = p->left;
-            switch (w->balanceFactor)
-            {
-            case -1:
-                node->balanceFactor= 0 ;
-                p->balanceFactor = 1;
-                break;
-            case 0 :
-                node->balanceFactor = 0 ;
-                p->balanceFactor = 0 ;
-                break;
-            case 1:
-                node->balanceFactor = -1;
-                p->balanceFactor = 0;
-                break;
-            default:
-                break;
-            }
-            w->balanceFactor = 0;
-            rotateRight(p);
-            node->right = p;
-            rotateLeft(node);
-            break;
-        case 0 :
-            rotateLeft(node);
-            node->balanceFactor = -1 ;
-            p->balanceFactor=1 ;
-            isShorter = false ;
-            break;
-        case 1:
-            rotateLeft(node);
-            node->balanceFactor = 0 ;
-            p->balanceFactor = 0;
-            break;
-        default:
-            break;
-        }
-    default:
-        break;
-    }
-}
-template <typename T>
-void AVLTree<T>::balanceFromRightDeletion(BTNode<T>*& node , bool& isShorter)
-{
-    BTNode<T>* p;
-    BTNode<T>* w;
-
-    switch (node->balanceFactor)
-    {
-    case 1:
-        node->balanceFactor = 0 ;
-        break;
-    case 0 :
-        node->balanceFactor = -1 ;
-        isShorter = false;
-        break ;
-    case -1:
-        p = node->left;
-        switch (p->balanceFactor)
-        {
-        case -1:
-            rotateRight(node);
-            node->balanceFactor = 0 ;
-            p->balanceFactor = 0 ;
-            break;
-        case 0 :
-            rotateRight(node);
-            node->balanceFactor= 1;
-            p->balanceFactor= -1;
-            isShorter = false;
-            break;
-        case 1:
-            w = p->right;
-            switch (w->balanceFactor)
-            {
-            case -1:
-                node->balanceFactor = 1;
-                p->balanceFactor = 0;
-                break;
-            case 0 :
-                node->balanceFactor = 0;
-                p ->balanceFactor = 0;
-                break;
-            case 1:
-                node->balanceFactor =0 ;
-                p->balanceFactor = -1;
-                break;
-            default:
-                break;
-            }
-            w->balanceFactor = 0 ;
-            rotateLeft(p);
-            node->left = p ;
-            rotateRight(node);
-            break;
-        default:
-            break;
-        }
-        break;
-    default:
-        break;
-    }
-}
 
 
 template <typename T>
 void AVLTree<T>::removeNode(T value)
 {
-    bool isShorter = false;
-    deleteFromTree(this->root , value , isShorter);
+    this->root=deleteFromTree(this->root , value );
 }
 template <typename T>
-void AVLTree<T>::deleteFromTree(BTNode<T>* & node , T value, bool& isShorter)
+BTNode<T>* AVLTree<T>::deleteFromTree(BTNode<T>* & node , const T& value)
 {
+    BTNode<T>* temp;
+   if (node == nullptr)
+   {
+       return node;
+   }
+    if (value < node->info)
+    {
+        node->left = deleteFromTree(node->left , value);
+    }
+    else if (value > node->info)
+    {
+        node->right = deleteFromTree(node->right , value);
+    }
+    else
+    {
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            delete node ;
+            return nullptr;
+        }
+        if (node->left == nullptr)
+        {
+            temp = node->right;
+            delete node;
+            return temp;
+        }
+        if ( node->right == nullptr)
+        {
+            temp = node->left;
+            delete node;
+            return temp;
+        }
+
+        temp = minValueNode(node->right);
+        node->info = temp->info;
+        node->right = deleteFromTree(node->right , temp->info);
+    }
     if (node == nullptr)
     {
-        cerr<<"Item not found\n";
-        isShorter = false;
-        return;
+        return  node;
     }
-    if (node->info > value)
-    {
-        deleteFromTree(node->left , value , isShorter);
-        if (isShorter)
-        {
-            balanceFromRightDeletion(node , isShorter);
-        }
-    }
-    else if (node->info < value)
-    {
-        deleteFromTree(node->right , value , isShorter);
-        if (isShorter)
-        {
-            balanceFromLeftDeletion(node , isShorter);
-        }
-    }
-    else
-    {
-        deleteNode(node , isShorter);
-    }
+
+    node->height = 1+max(height(node->left) , height(node->right));
+    return rebalance(node);
+}
+
+template <typename T>
+T AVLTree<T>::maxValue()
+{
+    return maxValueNode(this->root)->info;
 }
 template <typename T>
-void AVLTree<T>::deleteNode(BTNode<T>*& node, bool& isShorter)
+T AVLTree<T>::minValue()
 {
-    BTNode<T>* temp ;
-    if (node->left == nullptr && node->right == nullptr) // the node to be deleted is a leaf
-    {
-        delete node;
-        node = nullptr;
-        isShorter= true;
-    }
-    else if (node->left == nullptr) // the node has no left child
-    {
-        temp = node ;
-        node = node->right;
-        delete temp;
-        isShorter = true;
-    }
-    else if (node->right ==  nullptr)// the node has no right child
-    {
-        temp = node ;
-        node = node->left;
-        delete temp ;
-        isShorter = true;
-    }
-    else
-    {
-        BTNode<T>* current = node->left;
-        while (current->right != nullptr)
-        {
-            current = current->right;
-        }
-        node->info = current->info ;
-        deleteFromTree(node->left , current->info , isShorter);
-        if (isShorter)
-        {
-            balanceFromRightDeletion(node , isShorter);
-        }
-    }
+    return minValueNode(this->root)->info;
 }
 
